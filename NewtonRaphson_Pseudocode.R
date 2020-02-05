@@ -4,24 +4,40 @@ F1<-function(x){
 }
 
 #define a function F2(x)=sin(x)
+F2<-function(x){
+  return(c(sin(x),cos(x))) 
+}
 #define F3(x)=(x-2)^3-6*x
-#define F4(x)=cos(x)-x### 
+F3<-function(x){
+  return(c((x-2)^3-6*x,3(x-2)^2-6)) 
+}
+#define F4(x)=cos(x)-x 
+F4<-function(x){
+  return(c(cos(x)-x,-sin(x)-1)) 
+}
 # (All functions need to return f(x) and f’(x))
 
 
 
 # Define your Newton-Raphson function  
 NewtonRaphson<-function(func,StartingValue,Tolerance,MaxNumberOfIterations){
-  #initialize a variable, Deviation (say), to record |f(x)| so that you know how far away you are from 0. 
+  #initialize a variable, Deviation (say), to record |f(x)| so that you know how far away you are from 0.
+  Deviation <- 1000
   #(So initialize it to some arbitrary large number)
   #Set up a counter, i, to record how many iterations you have performed. Set it equal to 0	
+  i <- 0
   # Initialize the values of x and f(x)
-  
+  Xprime <- StartingValue
   #Set up a while loop until we hit the required target accuracy or the max. number of steps
   while ((i<MaxNumberOfIterations)&&(Deviation>Tolerance))
   {
     # Record the value of f(x) and f’(x), for the current x value. 
+    X <- Xprime 
+    Xprime <- func(X)
     # I put them in a variable Z. Z[1]<-x; Z[2]<-f(x)
+    Z <- c()
+    Z[1] <- X
+    Z[2] <- Xprime
     # To be safe, check that the function and it's derivative are defined at X (either could be NaN if you are unlucky)
     if ((Z[1]=="NaN")||(Z[2]=="NaN")){
       cat("\nFunction or derivative not defined error.\n")
@@ -29,14 +45,14 @@ NewtonRaphson<-function(func,StartingValue,Tolerance,MaxNumberOfIterations){
     }
     
     #Find the next X-value using Newton-Raphson's formula. Let's call that value X
-    
+    X <- Xprime
     # calculate Deviation<- |f(x)-0|
-    
+    Deviation <- abs(Z[2] - Z[1])
     # increase the value of your iteration counter
     i<-i+1
     
     # if you like, have the program write out how it is getting on
-    cat(paste("\nIteration ",i,":   X=",X,"  Y=",Y))
+    cat(paste("\nIteration ",i,":   X=",X,"  Y=", Deviation))
     
     # If you are feeling fancy, add some line segments to the screen to show where it just went
     # See the 'fixed points' code for a reminder of how to do that.
@@ -52,6 +68,7 @@ NewtonRaphson<-function(func,StartingValue,Tolerance,MaxNumberOfIterations){
   return(X)
 }
 
+NewtonRaphson(F1,10,1e-3,40)
 
 pdf("Fig6.pdf")
 curve(x^2,-1,11,main="y=x^2")
